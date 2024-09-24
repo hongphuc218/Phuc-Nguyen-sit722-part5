@@ -4,4 +4,4 @@ set -u # or set -o nounset
 : "$CONTAINER_REGISTRY"
 : "$VERSION"
 
-envsubst < ./scripts/kubernetes/deployment.yaml | kubectl delete -f -
+envsubst < ./scripts/kubernetes/${NAME}.yaml | kubectl delete -f -

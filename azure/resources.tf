@@ -1,3 +1,16 @@
+resource "azurerm_resource_group" "S224806968rg" {
+    name     = var.app_name
+    location = var.location
+}
+
+resource "azurerm_container_registry" "container_registry" {
+    name                = var.app_name
+    resource_group_name = azurerm_resource_group.S224806968rg.name
+    location            = var.location
+    admin_enabled       = true
+    sku                 = "Basic"
+}
+
 resource "azurerm_kubernetes_cluster" "cluster" {
     name                = var.app_name
     location            = var.location

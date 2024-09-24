@@ -1,0 +1,60 @@
+name: Deploy microservices
+
+on:
+  # Trigger the workflow on pushes to the main branch
+  push: 
+    branches:
+      - main
+    paths:
+      - book_catalog/**
+      - inventory_management/**
+  
+  # Allow manual trigger through GitHub Actions UI
+  workflow_dispatch: 
+
+jobs:
+
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Checkout repository
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      # Make the scripts executable
+      - name: Make scripts executable
+        run: |
+          chmod +x ./scripts/build-image.sh
+          chmod +x ./scripts/push-image.sh
+          chmod +x ./scripts/deploy.sh
+
+      # -------------------------
+      # Deploy book-catalog
+      # -------------------------
+
+      - name: Set up book-catalog environment
+        env:
+          CONTAINER_REGISTRY: ${{ secrets.CONTAINER_REGISTRY }}
+          VERSION: ${{ github.sha }}
+          NAME: book-catalog
+          DIRECTORY: book_catalog
+        run: |
+          ./scripts/build-image.sh
+          ./scripts/push-image.sh
+          ./scripts/deploy.sh
+
+      # -------------------------
+      # Deploy inventory-management
+      # -------------------------
+
+      - name: Set up inventory-management environment
+        env:
+          CONTAINER_REGISTRY: ${{ secrets.CONTAINER_REGISTRY }}
+          VERSION: ${{ github.sha }}
+          NAME: inventory-management
+          DIRECTORY: inventory_management
+        run: |
+          ./scripts/build-image.sh
+          ./scripts/push-image.sh
+          ./scripts/deploy.sh
