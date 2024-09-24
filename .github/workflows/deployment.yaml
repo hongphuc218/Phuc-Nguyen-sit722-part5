@@ -39,10 +39,33 @@ jobs:
           VERSION: ${{ github.sha }}
           NAME: book-catalog
           DIRECTORY: book_catalog
-        run: |
-          ./scripts/build-image.sh
-          ./scripts/push-image.sh
-          ./scripts/deploy.sh
+      #
+      # Builds the Docker image.
+      #
+      - name: Build book-catalog
+        run: ./scripts/build-image.sh
+
+      #
+      # Publishes the Docker image to the container registry.
+      #
+      - name: Publish book-catalog
+        run: ./scripts/push-image.sh
+
+      #
+      # Installs Kubectl and connects it to the cluster.
+      #
+      # https://github.com/marketplace/actions/kubernetes-cli-kubectl
+      #
+      - uses: tale/kubectl-action@v1
+        with:
+          base64-kube-config: ${{ secrets.KUBE_CONFIG }}
+          kubectl-version: v1.24.2
+      
+      #
+      # Expands the configuration template and deploys the microservice.
+      #
+      - name: Deploy book-catalog
+        run: ./scripts/deploy.sh
 
       # -------------------------
       # Deploy inventory-management
@@ -58,3 +81,31 @@ jobs:
           ./scripts/build-image.sh
           ./scripts/push-image.sh
           ./scripts/deploy.sh
+      
+      #
+      # Builds the Docker image.
+      #
+      - name: Build inventory-management
+        run: ./scripts/build-image.sh
+
+      #
+      # Publishes the Docker image to the container registry.
+      #
+      - name: Publish inventory-management
+        run: ./scripts/push-image.sh
+
+      #
+      # Installs Kubectl and connects it to the cluster.
+      #
+      # https://github.com/marketplace/actions/kubernetes-cli-kubectl
+      #
+      - uses: tale/kubectl-action@v1
+        with:
+          base64-kube-config: ${{ secrets.KUBE_CONFIG }}
+          kubectl-version: v1.24.2
+          
+      #
+      # Expands the configuration template and deploys the microservice.
+      #
+      - name: Deploy inventory-management
+        run: ./scripts/deploy.sh
