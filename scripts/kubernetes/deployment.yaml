@@ -21,7 +21,7 @@ spec:
         imagePullPolicy: Always
         env: 
         - name: DATABASE_URL 
-          value: $DATABASE_URL 
+          value: postgresql://s224806968_postgresql_x2yh_user:Z7TdK4yWxtHodAHpTTl0CSRVgDIjh8K3@dpg-crop1r9u0jms73cdat90-a.singapore-postgres.render.com/s224806968_postgresql_x2yh
 
 --- #YAML separator that separate multiple documents within the same file.
 apiVersion: v1 
@@ -59,7 +59,7 @@ spec:
         imagePullPolicy: Always
         env:
         - name: DATABASE_URL
-          value: $DATABASE_URL
+          value: postgresql://s224806968_postgresql_x2yh_user:Z7TdK4yWxtHodAHpTTl0CSRVgDIjh8K3@dpg-crop1r9u0jms73cdat90-a.singapore-postgres.render.com/s224806968_postgresql_x2yh
 
 ---
 # Service for inventory-management
