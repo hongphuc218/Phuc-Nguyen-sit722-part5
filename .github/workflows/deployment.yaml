@@ -39,75 +39,57 @@ jobs:
       # Deploy book-catalog
       # -------------------------
 
-      - name: Set up book-catalog environment
+      # Build book-catalog
+      - name: Build book-catalog
         env:
           NAME: book-catalog
           DIRECTORY: book_catalog
-      #
-      # Builds the Docker image.
-      #
-      - name: Build book-catalog
         run: ./scripts/build-image.sh
 
-      #
-      # Publishes the Docker image to the container registry.
-      #
+      # Publish book-catalog
       - name: Publish book-catalog
+        env:
+          NAME: book-catalog
+          DIRECTORY: book_catalog
         run: ./scripts/push-image.sh
 
-      #
-      # Installs Kubectl and connects it to the cluster.
-      #
-      # https://github.com/marketplace/actions/kubernetes-cli-kubectl
-      #
-      - uses: tale/kubectl-action@v1
+      # Install Kubectl for book-catalog
+      - name: Install Kubectl for book-catalog
+        uses: tale/kubectl-action@v1
         with:
           base64-kube-config: ${{ secrets.KUBE_CONFIG }}
           kubectl-version: v1.24.2
       
-      #
-      # Expands the configuration template and deploys the microservice.
-      #
+      # Deploy book-catalog to Kubernetes
       - name: Deploy book-catalog
+        env:
+          NAME: book-catalog
+          DIRECTORY: book_catalog
         run: ./scripts/deploy.sh
 
       # -------------------------
       # Deploy inventory-management
       # -------------------------
 
-      - name: Set up inventory-management environment
+      # Build inventory-management
+      - name: Build inventory-management
         env:
           NAME: inventory-management
           DIRECTORY: inventory_management
-        run: |
-          ./scripts/build-image.sh
-          ./scripts/push-image.sh
-          ./scripts/deploy.sh
-      
-      #
-      # Builds the Docker image.
-      #
-      - name: Build inventory-management
         run: ./scripts/build-image.sh
 
-      #
-      # Publishes the Docker image to the container registry.
-      #
+      # Publish inventory-management
       - name: Publish inventory-management
+        env:
+          NAME: inventory-management
+          DIRECTORY: inventory_management
         run: ./scripts/push-image.sh
 
-      #
-      # Installs Kubectl and connects it to the cluster.
-      #
-      # https://github.com/marketplace/actions/kubernetes-cli-kubectl
-      #
-      - uses: tale/kubectl-action@v1
+      # Install Kubectl for inventory-management
+      - name: Install Kubectl for inventory-management
+        uses: tale/kubectl-action@v1
         with:
           base64-kube-config: ${{ secrets.KUBE_CONFIG }}
           kubectl-version: v1.24.2
           
-      #
-      # Expands the configuration template and deploys the microservice.
-      #
-      - name: Deploy inventory-management
-        run: ./scripts/deploy.sh
+      # Deploy
